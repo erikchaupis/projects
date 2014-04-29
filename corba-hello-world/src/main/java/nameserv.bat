@@ -1,0 +1,1 @@
+tnameserv -ORBInitialPort 900
