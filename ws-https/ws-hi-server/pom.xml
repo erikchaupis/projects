@@ -68,7 +68,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>cxf-jaxws-javafirst</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -80,7 +79,7 @@
 					<httpsPort>8443</httpsPort>
 					<keystorePass>Admin123</keystorePass>
 <!-- 				keytool -genkey -alias tomcat -keyalg RSA  -->
-<!-- https://10.50.24.115:8443/cxf-jaxws-javafirst/HelloWorld?wsdl -->
+<!-- https://10.50.24.115:8443/ws-hi-server/HelloWorld?wsdl -->
 				</configuration>
 			</plugin>
 		</plugins>
