@@ -1,0 +1,43 @@
+<project name="ant-project">
+
+	<property name="build.dir" value="build" />
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="build/classes" />
+		<javac srcdir="src" destdir="${build.dir}/classes" debug="true" debuglevel="lines,vars,source"/>
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="build/jar" />
+		<jar destfile="${build.dir}/jar/ant-project.jar" basedir="${build.dir}/classes">
+			<manifest>
+				<attribute name="Main-Class" value="com.ant.core.Process" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run" depends="jar">
+		<java jar="${build.dir}/jar/ant-project.jar" fork="true" failonerror="true">
+
+			<!-- -Xrunjdwp:transport=dt_socket,address=9009,server=y,suspend=y	-->
+			<jvmarg line="-agentlib:jdwp=transport=dt_socket,address=localhost:9009,server=y,suspend=y" />
+		</java>
+	</target>
+
+	<target name="run Local" depends="compile" description="Run from classs files">
+		<java classname="com.ant.core.Process" failonerror="true" fork="true">
+			
+			<jvmarg line="-agentlib:jdwp=transport=dt_socket,address=localhost:9009,server=y,suspend=y" />
+			 
+			<classpath>
+				<pathelement location="${build.dir}/classes" />
+				<pathelement location="${build.dir}/.." />
+			</classpath>
+		</java>
+	</target>
+
+</project>
