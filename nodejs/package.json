@@ -1,0 +1,22 @@
+{
+  "name": "realtime_node_app",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {	
+    "body-parser": "^1.8.1",
+	"express": "4.2.x"
+  },
+  "engines": {
+    "node": ">=0.10",
+	"npm": ">=2.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }  
+}
