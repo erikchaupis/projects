@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>client-generator</artifactId>
+    <name>client-generator</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.oracle.weblogic</groupId>
+            <artifactId>weblogic-server-pom</artifactId>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <exclusions>
+	         <exclusion>
+				<groupId>stax</groupId>
+				<artifactId>stax-api</artifactId>
+				</exclusion>
+				</exclusions>
+        </dependency>  
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+							<goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/clientgen</source>
+                            </sources>
+                            <resources>
+							<resource>
+								<directory>${project.build.directory}/generated-sources/clientgen</directory>
+								<targetPath>${project.build.outputDirectory}</targetPath>
+								<includes>
+									<include>**/*.wsdl</include>
+									<include>**/*.xml</include>
+								</includes>
+							</resource>
+						</resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <!--
+                * Plugin to generate stub classes from WSDL file
+                * Using Ant and weblogic.wsee.tools.anttasks.ClientGenTask 
+                * Support both JAXRPC and JAXWS types. 
+                *
+                * For details, see link:
+                * http://docs.oracle.com/middleware/1212/wls/WSREF/anttasks.htm#i1043588
+                -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>antrun-clientgen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                            
+                                <!-- *********** Define clientgen task *********** -->
+                                <path id="clientgen.classpath">
+                                    <pathelement location="${java.home}/lib/tools.jar"/>
+                                    <pathelement location="${java.home}/../lib/tools.jar"/>
+                                    <path refid="maven.compile.classpath"/>
+                                </path>
+                                <taskdef name="clientgen" 
+                                         classname="weblogic.wsee.tools.anttasks.ClientGenTask" 
+                                         classpathref="clientgen.classpath" />
+                                
+                                
+                                <!-- ***********WS  *********** -->
+                                <clientgen type="JAXWS" 
+                                           wsdl="${basedir}/MODULE/service.wsdl" 
+                                           destDir="${project.build.outputDirectory}" 
+                                           packageName="com.package" 
+                                           copyWsdl="true" 
+                                           generateRuntimeCatalog="false" 
+                                           verbose="false" 
+                                           failonerror="true" />
+                             
+
+
+			   </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- JAXB xjc plugin that invokes the xjc compiler to compile XML schema into Java classes.-->
+        	<plugin>
+            	<groupId>org.codehaus.mojo</groupId>
+            	<artifactId>jaxb2-maven-plugin</artifactId>
+            	<executions>
+                	<execution>
+                		<id>xjc-scmplus</id>
+                    	<goals>
+                        	<goal>xjc</goal>
+                    	</goals>
+                    	<configuration>
+                			<!-- The schema directory or xsd files. -->
+                			<schemaDirectory>${basedir}/folder1/</schemaDirectory>
+                			<!-- The package in which the source files will be generated. -->
+                			<packageName>com.company.namespaces.packages</packageName>
+                			<!-- The working directory to create the generated java source files. -->
+                			<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                			<clearOutputDir>false</clearOutputDir>
+            			</configuration>
+                	</execution>
+            	</executions>
+        	</plugin>
+                <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                     <artifactId>xmlbeans-maven-plugin</artifactId>
+                       <configuration>
+                            <schemaDirectory>${basedir}/folder2</schemaDirectory>
+                         </configuration>
+                         <executions>
+                           <execution>
+                            <goals>
+                              <goal>xmlbeans</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
