@@ -6,9 +6,11 @@ Change path to alfresco to newPathForAlfresco
 2) mv alfresco.war newPathForAlfresco.war
 3) vim /apps/opt/alfresco-5.0.d/tomcat/shared/classes/alfresco-global.properties
  * alfresco.context=alfresco to newPathForAlfresco
-4) vim /apps/opt/alfresco-5.0.d/solr4/archive-SpacesStore/conf/solrcore.properties
+4)  vim /apps/opt/alfresco-5.0.d/tomcat/shared/classes/alfresco/web-extension/share-config-custom.xml
+  * Change all paths with alfresco to cdx
+5) vim /apps/opt/alfresco-5.0.d/solr4/archive-SpacesStore/conf/solrcore.properties
  * alfresco.baseUrl=/alfresco to newPathForAlfresco
-5) vim /apps/opt/alfresco-5.0.d/solr4/workspace-SpacesStore/conf/solrcore.properties
+6) vim /apps/opt/alfresco-5.0.d/solr4/workspace-SpacesStore/conf/solrcore.properties
  * alfresco.baseUrl=/alfresco to newPathForAlfresco
 
 * service alfresco start
