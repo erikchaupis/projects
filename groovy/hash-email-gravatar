@@ -1,0 +1,39 @@
+// To hash mail in md5 from a changes.json file
+package util
+
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+
+class GroovyClass {
+
+  	static String FILE_NAME="changes.json"
+	static void main(String[] args) {
+
+		File f = new File( FILE_NAME )
+		println("Loaded file")
+		if( f.exists() ) {
+			// Read json
+			def jsonObject = f.withReader { r ->
+				new JsonSlurper().parse( r )
+			}
+			
+			// Hash email with md5
+			def list=jsonObject.sub_items;
+			for (Object item : list) {
+				item.img_url ="http://www.gravatar.com/avatar/"+generateMD5(item.img_url)+"?size=200"
+			}
+
+			// Save json in file
+			def jsonBuilder = new JsonBuilder(jsonObject);
+			println("Converted to json")
+			new File(FILE_NAME).write(jsonBuilder.toPrettyString())
+		}
+	}
+
+	static def generateMD5(String s) {
+		MessageDigest digest = MessageDigest.getInstance("MD5")
+		digest.update(s.bytes);
+		new BigInteger(1, digest.digest()).toString(16).padLeft(32, '0')
+	}
+}
