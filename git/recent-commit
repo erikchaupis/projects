@@ -1,0 +1,3 @@
+git log  -n 5 \
+--pretty=format:'{%n  "name": "%an" ,%n  "date":"%ad" ,%n  "img_url":"%ae", %n  "items":[{%n    "name": "%s", %n    "link": "<repo_url>/commits/%h"%n  }]%n},' \
+$@ | perl -pe 'BEGIN{print "{\"sub_items\":["}; END{print "]}\n"}' |  perl -pe 's/},]/}]/' >> changes.json
